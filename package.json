@@ -1,0 +1,25 @@
+{
+  "name": "nuke",
+  "version": "1.0.0",
+  "description": "An app based on hate promoting love.",
+  "scripts": {
+    "frontend": "cd frontend && npm start",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "nodemon server.js",
+    "start": "concurrently -kill-others \"npm run server\" \"npm run frontend\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/palindrome69/nuke.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/palindrome69/nuke/issues"
+  },
+  "homepage": "https://github.com/palindrome69/nuke#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4"
+  }
+}
