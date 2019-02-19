@@ -25,7 +25,7 @@ class Login extends Component {
   }
 
   handleUserNameChange(event) {
-    let validationPattern = / ^[\w._]{6,12}$ /;
+    let validationPattern = /^[\w._]{6,12}$/;
     let isValidated = validationPattern.test(event.target.value);
     let username = this.state.username;
 
