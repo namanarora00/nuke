@@ -1,7 +1,9 @@
 import { Component } from "react";
 import React from "react";
-
-import { Input, Button, Icon, Card, Divider } from "antd";
+import { Input, Button, Icon, Card, Divider, message } from "antd";
+import PropTypes from "prop-types";
+import axios from "axios";
+import { isString } from "util";
 
 class Login extends Component {
   constructor(props) {
@@ -25,7 +27,7 @@ class Login extends Component {
   }
 
   handleUserNameChange(event) {
-    let validationPattern = / ^[\w._]{6,12}$ /;
+    let validationPattern = /^[\w._]{6,12}$/;
     let isValidated = validationPattern.test(event.target.value);
     let username = this.state.username;
 
@@ -51,7 +53,32 @@ class Login extends Component {
   }
 
   onSubmit() {
-    // auth with server
+    let formData = {
+      username: this.state.username.value,
+      password: this.state.password.value
+    };
+    axios({
+      method: "post",
+      url: "/user/login",
+      data: formData,
+      config: {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          authorization:
+            "Token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3ROYW1hbiIsImlkIjoiNWM3NDM3NTdiMTkyNTIxNTQ0ZWVhM2QzIiwiZXhwIjoxNTU2MzUwMDUzLCJpYXQiOjE1NTExNjYwNTN9.9-iADhshqFjT5YXiIcccznXwr2C5jb7SoafU4TGhWA0"
+        }
+      }
+    })
+      .then(response => {
+        let user = response.data.user;
+        console.log(user);
+        if (user) message.success("Successfully Logged in");
+        else message.error("Username or password incorrect");
+      })
+      .catch(err => {
+        if (err.response.status === 401)
+          message.error("You are not authorized");
+      });
   }
 
   componentWillUnmount() {
@@ -68,17 +95,14 @@ class Login extends Component {
     return (
       <Card
         bodyStyle={{ color: "rgb(0,0,0)" }}
-        bordered={false}
         hoverable
-        style={{
-          marginTop: "5%",
-          textAlign: "center"
-        }}
+        bordered={false}
+        style={this.props.style}
       >
-        <h1>NuKE</h1>
+        <h1>Log In</h1>
 
         <Input
-          style={{ width: "75%", marginBottom: "10px" }}
+          style={{ width: "75%", marginBottom: "20px" }}
           id="username"
           size="large"
           placeholder="Username"
@@ -91,7 +115,7 @@ class Login extends Component {
         <br />
 
         <Input.Password
-          style={{ width: "75%", marginBottom: "20px" }}
+          style={{ width: "75%", marginBottom: "30px" }}
           id="password"
           size="large"
           placeholder="Password"
@@ -109,21 +133,21 @@ class Login extends Component {
               : true
           }
           size="large"
-          style={{ width: "75%", marginBottom: "10px" }}
+          style={{ width: "75%", marginBottom: "20px" }}
           type="primary"
           onClick={this.onSubmit}
         >
           Log In
         </Button>
 
-        <Divider>
+        <Divider style={{ width: "60%" }}>
           <strong>OR</strong>
         </Divider>
 
         <Button
           icon="google"
           size="large"
-          style={{ width: "75%", marginBottom: "10px" }}
+          style={{ width: "75%", marginBottom: "20px" }}
           href=""
         >
           <span style={{ fontSize: "1.25vw" }}>Log In with google</span>
@@ -131,10 +155,20 @@ class Login extends Component {
 
         <br />
 
-        <a href="/">Forgot Password</a>
+        <Button
+          size="large"
+          style={{ width: "75%", marginBottom: "20px" }}
+          href=""
+        >
+          <span style={{ fontSize: "1.25vw" }}>Forgot Password</span>
+        </Button>
       </Card>
     );
   }
 }
+
+Login.propTypes = {
+  style: PropTypes.object
+};
 
 export default Login;
