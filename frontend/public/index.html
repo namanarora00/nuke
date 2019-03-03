@@ -9,9 +9,26 @@
   <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 
   <title>React App</title>
+  <style>
+    #parent {
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    #child {
+      width: 100%;
+      height: 100%;
+      overflow-y: scroll;
+      padding-right: 17px;
+      /* Increase/decrease this value for cross-browser compatibility */
+      box-sizing: content-box;
+      /* So the width will be 100% + 17px */
+    }
+  </style>
 </head>
 
-<body>
+<body style="background-color:rgb(250, 250, 250)">
   <noscript>You need to enable JavaScript to run this app.</noscript>
   <div id="root"></div>
 </body>
