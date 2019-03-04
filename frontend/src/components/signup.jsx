@@ -91,7 +91,7 @@ class SignUp extends Component {
 
     axios({
       method: "post",
-      url: "api/user/register",
+      url: "/api/user/register",
       data: formData,
       config: { headers: { "Content-Type": "multipart/form-data" } }
     })

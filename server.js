@@ -36,7 +36,7 @@ app.use(bodyParser.urlencoded({
 app.use('/static', express.static('public'));
 
 // routes
-app.use('api/user', users)
+app.use('/api/user', users)
 
 // 404
 app.use((req, res, next) => {
@@ -51,7 +51,7 @@ if (process.env.NODE_ENV === 'production') {
     // set a static folder
     app.use(express.static('frontend/build'))
     app.get('*', (req, res) => {
-        res.sendFile(path.resolve(__dirname, 'frontend/build/index.html'));
+        res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'));
     });
 }
 
