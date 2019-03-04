@@ -147,6 +147,7 @@ class Login extends Component {
         <Button
           icon="google"
           size="large"
+          disabled
           style={{ width: "75%", marginBottom: "20px" }}
           href=""
         >

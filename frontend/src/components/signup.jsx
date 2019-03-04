@@ -97,11 +97,13 @@ class SignUp extends Component {
     })
       .then(response => {
         message.success("Successfully signed up");
-        console.log(response);
       })
-      .catch(response => {
-        message.error("An error occurred. Please try again");
-        console.log(response);
+      .catch(err => {
+        if (err.response.status === 401) {
+          message.error("Sorry this username is already taken");
+        } else {
+          message.error("Could not connect. Please try again");
+        }
       });
   }
 
@@ -234,6 +236,7 @@ class SignUp extends Component {
         <Button
           icon="google"
           size="large"
+          disabled
           style={{ width: "75%", marginBottom: "20px" }}
         >
           <span style={{ fontSize: "1.25vw" }}>Sign Up with google</span>
