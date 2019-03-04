@@ -1,6 +1,6 @@
 import React from "react";
 import { Component } from "react";
-import { Card, Input, DatePicker, Radio, Button } from "antd";
+import { Card, Input, DatePicker, Radio, Button, message } from "antd";
 import PropTypes from "prop-types";
 import axios from "axios";
 
@@ -96,9 +96,11 @@ class SignUp extends Component {
       config: { headers: { "Content-Type": "multipart/form-data" } }
     })
       .then(response => {
+        message.success("Successfully signed up");
         console.log(response);
       })
       .catch(response => {
+        message.error("An error occurred. Please try again");
         console.log(response);
       });
   }
