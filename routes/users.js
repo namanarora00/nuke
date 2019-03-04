@@ -52,20 +52,32 @@ router.post('/register', auth.optional, (req, res) => {
     let data = req.body;
     let newUser = new UserModel(data);
 
-    let password = data.password;
+    return UserModel.findOne({
+        username: data.username
+    }).then(doc => {
+        if (doc) {
+            return res.status(401).json({
+                message: "username already exists"
+            })
+        } else {
+            let password = data.password;
 
-    newUser.setPassword(password);
-    newUser.save()
-        .then(doc => {
-            console.log(doc)
-            res.status(200).json(doc);
-        })
-        .catch(error => {
-            console.error(error.message)
-            res.json({
-                "message": "Sorry this username is already taken."
-            });
-        });
+            newUser.setPassword(password);
+            newUser.save()
+                .then(doc => {
+                    console.log(doc)
+                    res.status(200).json(doc);
+                })
+                .catch(error => {
+                    console.error(error.message)
+                    res.json({
+                        "message": "Sorry this username is already taken."
+                    });
+                });
+        }
+    })
+
+
 });
 
 router.use(errorHandler)
