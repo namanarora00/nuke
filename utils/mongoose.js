@@ -7,7 +7,7 @@ function connect(callback) {
         })
         .then(() => {
             console.log("connected")
-            if (callback) callback(null, dbName);
+            if (callback) callback(null, "Nuke");
         })
         .catch(err => {
             callback(err)
