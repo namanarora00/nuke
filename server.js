@@ -3,6 +3,7 @@ const connect = require('./utils/mongoose');
 const users = require('./routes/users');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const path = require('path');
 
 var app = express();
 
@@ -34,7 +35,7 @@ app.use(bodyParser.urlencoded({
 app.use('/static', express.static('public'));
 
 // routes
-app.use('/user', users)
+app.use('api/user', users)
 
 // 404
 app.use((req, res, next) => {
@@ -43,6 +44,16 @@ app.use((req, res, next) => {
         url: req.url
     });
 });
+
+
+if (process.env.NODE_ENV === 'production') {
+    // set a static folder
+    app.use(express.static('frontend/build'))
+    app.get('*', (req, res) => {
+        res.sendFile(path.resolve(__dirname, 'frontend/build/index.html'));
+    });
+}
+
 
 const port = process.env.PORT || 8000;
 app.listen(port, 'localhost');

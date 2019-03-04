@@ -59,7 +59,7 @@ class Login extends Component {
     };
     axios({
       method: "post",
-      url: "/user/login",
+      url: "api/user/login",
       data: formData,
       config: {
         headers: {
