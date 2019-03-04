@@ -38,21 +38,21 @@ app.use('/static', express.static('public'));
 // routes
 app.use('/api/user', users)
 
-// 404
-app.use((req, res, next) => {
-    return res.status(404).json({
-        message: "Couldn't find the resource",
-        url: req.url
-    });
-});
-
-
 // set a static folder
 // SHOULD BE USED ONLY FOR PRODUCTION
 app.use(express.static(path.join(__dirname, "frontend", "build")))
 
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'frontend', 'build', 'index.html'));
+});
+
+
+// 404
+app.use((req, res, next) => {
+    return res.status(404).json({
+        message: "Couldn't find the resource",
+        url: req.url
+    });
 });
 
 
