@@ -1,14 +1,12 @@
 const mongoose = require('mongoose');
 
-const server = '127.0.0.1:27017';
-const dbName = 'nuke';
-
 function connect(callback) {
 
-    mongoose.connect(`mongodb://${server}/${dbName}`, {
+    mongoose.connect(`mongodb+srv://naman:namanpassword@cluster0-sqrrq.mongodb.net/nuke?retryWrites=true`, {
             useNewUrlParser: true
         })
         .then(() => {
+            console.log("connected")
             if (callback) callback(null, dbName);
         })
         .catch(err => {

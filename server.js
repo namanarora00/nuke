@@ -10,6 +10,7 @@ var app = express();
 // connect to database
 connect((err, name) => {
     if (err) {
+        console.log("error")
         console.log(err);
     } else {
         console.log("Successfully connected to database " + name);
