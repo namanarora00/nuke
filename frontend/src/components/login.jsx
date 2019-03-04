@@ -160,6 +160,7 @@ class Login extends Component {
           size="large"
           style={{ width: "75%", marginBottom: "20px" }}
           href=""
+          disabled
         >
           <span style={{ fontSize: "1.25vw" }}>Forgot Password</span>
         </Button>
