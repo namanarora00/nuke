@@ -26,14 +26,13 @@ function errorHandler(err, req, res, next) {
 }
 
 router.post('/login', auth.optional, (req, res) => {
-
     let data = req.body;
     return UserModel.findOne({
         username: data.username
     }).then(doc => {
         if (doc.validatePassword(data.password)) {
             return res.json({
-                user: doc.toAuthJSON()
+                token: doc.toAuthJSON().token
             })
         } else {
             return res.json({

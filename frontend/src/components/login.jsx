@@ -3,7 +3,6 @@ import React from "react";
 import { Input, Button, Icon, Card, Divider, message } from "antd";
 import PropTypes from "prop-types";
 import axios from "axios";
-import { isString } from "util";
 
 class Login extends Component {
   constructor(props) {
@@ -24,6 +23,7 @@ class Login extends Component {
     this.handleUserNameChange = this.handleUserNameChange.bind(this);
     this.clearUserName = this.clearUserName.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.resetPasswordField = this.resetPasswordField.bind(this);
   }
 
   handleUserNameChange(event) {
@@ -57,23 +57,19 @@ class Login extends Component {
       username: this.state.username.value,
       password: this.state.password.value
     };
+    this.resetPasswordField();
     axios({
       method: "post",
       url: "/api/user/login",
-      data: formData,
-      config: {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          authorization:
-            "Token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3ROYW1hbiIsImlkIjoiNWM3NDM3NTdiMTkyNTIxNTQ0ZWVhM2QzIiwiZXhwIjoxNTU2MzUwMDUzLCJpYXQiOjE1NTExNjYwNTN9.9-iADhshqFjT5YXiIcccznXwr2C5jb7SoafU4TGhWA0"
-        }
-      }
+      data: formData
     })
       .then(response => {
-        let user = response.data.user;
-        console.log(user);
-        if (user) message.success("Successfully Logged in");
-        else message.error("Username or password incorrect");
+        let token = response.data.token;
+        console.log(token);
+        if (token) {
+          sessionStorage.setItem("token", token);
+          message.success("Successfully Logged in");
+        } else message.error("Username or password incorrect");
       })
       .catch(err => {
         if (err.response.status === 401)
@@ -81,10 +77,14 @@ class Login extends Component {
       });
   }
 
-  componentWillUnmount() {
+  resetPasswordField() {
     let password = this.state.password;
     password.value = "";
     this.setState({ password });
+  }
+
+  componentWillUnmount() {
+    this.resetPasswordField();
   }
 
   render() {
@@ -121,6 +121,7 @@ class Login extends Component {
           placeholder="Password"
           prefix={<Icon type="lock" style={{ color: "rgba(0,0,0,.25)" }} />}
           visibilityToggle={true}
+          value={this.state.password.value}
           onChange={this.handlePasswordChange}
         />
 
