@@ -75,9 +75,12 @@ router.post('/register', auth.optional, (req, res) => {
                 });
         }
     })
-
-
 });
+
+router.get('/verify', auth.required, (req, res) => {
+    res.sendStatus(200);
+})
+
 
 router.use(errorHandler)
 module.exports = router;
