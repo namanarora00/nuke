@@ -3,7 +3,6 @@ import React from "react";
 import { Input, Button, Icon, Card, Divider, message } from "antd";
 import PropTypes from "prop-types";
 import axios from "axios";
-
 class Login extends Component {
   constructor(props) {
     super(props);
@@ -65,7 +64,6 @@ class Login extends Component {
     })
       .then(response => {
         let token = response.data.token;
-        console.log(token);
         if (token) {
           sessionStorage.setItem("token", token);
           message.success("Successfully Logged in");
