@@ -3,6 +3,7 @@ import React from "react";
 import { Input, Button, Icon, Card, Divider, message } from "antd";
 import PropTypes from "prop-types";
 import axios from "axios";
+
 class Login extends Component {
   constructor(props) {
     super(props);
@@ -67,11 +68,11 @@ class Login extends Component {
         if (token) {
           sessionStorage.setItem("token", token);
           message.success("Successfully Logged in");
+          if (this.props.afterLogin) this.props.afterLogin(); // callback after login successful
         } else message.error("Username or password incorrect");
       })
       .catch(err => {
-        if (err.response.status === 401)
-          message.error("You are not authorized");
+        message.error("Something went wrong, try again!");
       });
   }
 
@@ -169,7 +170,8 @@ class Login extends Component {
 }
 
 Login.propTypes = {
-  style: PropTypes.object
+  style: PropTypes.object,
+  afterLogin: PropTypes.func
 };
 
 export default Login;

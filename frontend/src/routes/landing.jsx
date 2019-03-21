@@ -1,6 +1,7 @@
 import { Component } from "react";
 import React from "react";
 import { Card, Col, Row } from "antd";
+import { withRouter, Redirect } from "react-router-dom";
 
 import Loadable from "react-loadable";
 
@@ -16,6 +17,9 @@ const LoadSignup = Loadable({
 
 class LandingPage extends Component {
   render() {
+    if (sessionStorage.getItem("token")) {
+      return <Redirect to={"/home"} />;
+    }
     return (
       <Card
         style={{
@@ -30,6 +34,9 @@ class LandingPage extends Component {
         <Row gutter={0}>
           <Col span={12}>
             <LoadLogin
+              afterLogin={() => {
+                this.forceUpdate();
+              }}
               style={{
                 marginTop: "5%",
                 textAlign: "center",
@@ -53,4 +60,4 @@ class LandingPage extends Component {
   }
 }
 
-export default LandingPage;
+export default withRouter(LandingPage);
