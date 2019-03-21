@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
 import axios from "axios";
-import { message } from "antd";
 
 function withAuth(ComponentToProtect) {
   return class extends Component {
@@ -22,22 +21,30 @@ function withAuth(ComponentToProtect) {
         }
       })
         .then(response => {
-          if (response.status === 200) this.setState({ loading: false });
+          this.setState({ loading: false });
         })
         .catch(err => {
-          if (err.response.status === 401) {
-            this.setState({ loading: false, redirect: true });
-          }
+          this.setState({ loading: false, redirect: true });
         });
     }
 
     render() {
-      if (this.state.loading) {
+      const { loading, redirect } = this.state;
+      if (loading) {
         return null;
       }
-      if (this.state.redirect) {
-        message.error("Your session expired. Log in again.");
-        return <Redirect to="/" />;
+      if (redirect) {
+        sessionStorage.removeItem("token");
+        return (
+          <div>
+            <Redirect
+              to={{
+                pathname: "/"
+              }}
+            />
+            ;
+          </div>
+        );
       }
       return (
         <>
