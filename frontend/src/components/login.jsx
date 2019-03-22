@@ -67,8 +67,8 @@ class Login extends Component {
     })
       .then(response => {
         let token = response.data.token;
+        this.setState({ loading: false });
         if (token) {
-          this.setState({ loading: false });
           sessionStorage.setItem("token", token);
           message.success("Successfully Logged in");
           if (this.props.afterLogin) this.props.afterLogin(); // callback after login successful
