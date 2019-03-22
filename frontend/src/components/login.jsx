@@ -75,6 +75,7 @@ class Login extends Component {
         } else message.error("Username or password incorrect");
       })
       .catch(err => {
+        this.setState({ loading: false });
         message.error("Something went wrong, try again!");
       });
   }

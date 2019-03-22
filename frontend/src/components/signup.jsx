@@ -101,6 +101,7 @@ class SignUp extends Component {
         message.success("Successfully signed up");
       })
       .catch(err => {
+        this.setState({ loading: false });
         if (err.response.status === 401) {
           message.error("Sorry this username is already taken");
         } else {
