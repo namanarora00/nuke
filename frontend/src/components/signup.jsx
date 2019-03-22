@@ -1,6 +1,6 @@
 import React from "react";
 import { Component } from "react";
-import { Card, Input, DatePicker, Radio, Button, message } from "antd";
+import { Card, Input, DatePicker, Radio, Button, message, Spin } from "antd";
 import PropTypes from "prop-types";
 import axios from "axios";
 
@@ -26,7 +26,8 @@ class SignUp extends Component {
       username,
       sex,
       birthday,
-      password
+      password,
+      loading: false
     };
 
     this.handleDateChange = this.handleDateChange.bind(this);
@@ -75,7 +76,7 @@ class SignUp extends Component {
 
   areAllValidated() {
     for (let field in this.state) {
-      if (field === "sex") continue;
+      if (field === "sex" || field === "loading") continue;
       if (!this.state[field].isValidated) return false;
     }
     return true;
@@ -88,7 +89,7 @@ class SignUp extends Component {
       if (field === "sex") formData[field] = this.state[field];
       else formData[field] = this.state[field].value;
     }
-
+    this.setState({ loading: true });
     axios({
       method: "post",
       url: "/api/user/register",
@@ -96,6 +97,7 @@ class SignUp extends Component {
       config: { headers: { "Content-Type": "multipart/form-data" } }
     })
       .then(response => {
+        this.setState({ loading: false });
         message.success("Successfully signed up");
       })
       .catch(err => {
@@ -109,139 +111,143 @@ class SignUp extends Component {
 
   render() {
     return (
-      <Card
-        bodyStyle={{ color: "rgb(0,0,0)" }}
-        hoverable
-        bordered={false}
-        style={this.props.style}
-      >
-        <h1>Sign Up</h1>
-
-        <Input
-          id="name"
-          value={this.state.name.value}
-          style={{
-            width: "75%",
-            marginBottom: "20px",
-            borderColor:
-              !this.state.name.isValidated && this.state.name.value ? "red" : ""
-          }}
-          onChange={e => {
-            this.handleFieldChange("name", e);
-          }}
-          size="large"
-          placeholder="John Doe"
-        />
-
-        <Input
-          id="email"
-          value={this.state.email.value}
-          style={{
-            width: "75%",
-            marginBottom: "20px",
-            borderColor:
-              !this.state.email.isValidated && this.state.email.value
-                ? "red"
-                : ""
-          }}
-          placeholder="johndoe123@gmail.com"
-          onChange={e => {
-            this.handleFieldChange("email", e);
-          }}
-          size="large"
-        />
-
-        <DatePicker
-          placeholder="Birthday"
-          size="large"
-          showToday={false}
-          onChange={this.handleDateChange}
-          format="YYYY-MM-DD"
-          style={{
-            borderColor:
-              !this.state.birthday.isValidated && this.state.birthday.value
-                ? "red"
-                : "",
-            display: "inline-block",
-            width: "37.5%",
-            marginBottom: "20px"
-          }}
-        />
-
-        <Radio.Group
-          value={this.state.sex}
-          onChange={e => {
-            this.setState({ sex: e.target.value });
-          }}
-          style={{
-            display: "inline-block",
-            width: "37.5%",
-            marginBottom: "20px"
-          }}
+      <Spin spinning={this.state.loading}>
+        <Card
+          bodyStyle={{ color: "rgb(0,0,0)" }}
+          hoverable
+          bordered={false}
+          style={this.props.style}
         >
-          <Radio size="large" value="male">
-            Male
-          </Radio>
-          <Radio size="large" value="female">
-            Female
-          </Radio>
-        </Radio.Group>
+          <h1>Sign Up</h1>
 
-        <Input
-          id="Username"
-          value={this.state.username.value}
-          style={{
-            display: "inline-block",
-            width: "36%",
-            marginRight: "3%",
-            marginBottom: "20px",
-            borderColor:
-              !this.state.username.isValidated && this.state.username.value
-                ? "red"
-                : ""
-          }}
-          size="large"
-          onChange={e => {
-            this.handleFieldChange("username", e);
-          }}
-          placeholder="Username"
-        />
+          <Input
+            id="name"
+            value={this.state.name.value}
+            style={{
+              width: "75%",
+              marginBottom: "20px",
+              borderColor:
+                !this.state.name.isValidated && this.state.name.value
+                  ? "red"
+                  : ""
+            }}
+            onChange={e => {
+              this.handleFieldChange("name", e);
+            }}
+            size="large"
+            placeholder="John Doe"
+          />
 
-        <Input.Password
-          id="Password"
-          value={this.state.password.value}
-          style={{
-            display: "inline-block",
-            width: "36%",
-            marginBottom: "20px"
-          }}
-          size="large"
-          placeholder="Password"
-          onChange={e => {
-            this.handleFieldChange("password", e);
-          }}
-        />
+          <Input
+            id="email"
+            value={this.state.email.value}
+            style={{
+              width: "75%",
+              marginBottom: "20px",
+              borderColor:
+                !this.state.email.isValidated && this.state.email.value
+                  ? "red"
+                  : ""
+            }}
+            placeholder="johndoe123@gmail.com"
+            onChange={e => {
+              this.handleFieldChange("email", e);
+            }}
+            size="large"
+          />
 
-        <br />
+          <DatePicker
+            placeholder="Birthday"
+            size="large"
+            showToday={false}
+            onChange={this.handleDateChange}
+            format="YYYY-MM-DD"
+            style={{
+              borderColor:
+                !this.state.birthday.isValidated && this.state.birthday.value
+                  ? "red"
+                  : "",
+              display: "inline-block",
+              width: "37.5%",
+              marginBottom: "20px"
+            }}
+          />
 
-        <Button
-          disabled={!this.areAllValidated()}
-          size="large"
-          style={{ width: "75%", marginBottom: "20px" }}
-          onClick={this.onSubmit}
-        >
-          <span style={{ fontSize: "1.25vw" }}>Sign Up</span>
-        </Button>
+          <Radio.Group
+            value={this.state.sex}
+            onChange={e => {
+              this.setState({ sex: e.target.value });
+            }}
+            style={{
+              display: "inline-block",
+              width: "37.5%",
+              marginBottom: "20px"
+            }}
+          >
+            <Radio size="large" value="male">
+              Male
+            </Radio>
+            <Radio size="large" value="female">
+              Female
+            </Radio>
+          </Radio.Group>
 
-        <Button
-          icon="google"
-          size="large"
-          disabled
-          style={{ width: "75%", marginBottom: "20px" }}
-        >
-          <span style={{ fontSize: "1.25vw" }}>Sign Up with google</span>
-        </Button>
-      </Card>
+          <Input
+            id="Username"
+            value={this.state.username.value}
+            style={{
+              display: "inline-block",
+              width: "36%",
+              marginRight: "3%",
+              marginBottom: "20px",
+              borderColor:
+                !this.state.username.isValidated && this.state.username.value
+                  ? "red"
+                  : ""
+            }}
+            size="large"
+            onChange={e => {
+              this.handleFieldChange("username", e);
+            }}
+            placeholder="Username"
+          />
+
+          <Input.Password
+            id="Password"
+            value={this.state.password.value}
+            style={{
+              display: "inline-block",
+              width: "36%",
+              marginBottom: "20px"
+            }}
+            size="large"
+            placeholder="Password"
+            onChange={e => {
+              this.handleFieldChange("password", e);
+            }}
+          />
+
+          <br />
+
+          <Button
+            disabled={!this.areAllValidated()}
+            size="large"
+            style={{ width: "75%", marginBottom: "20px" }}
+            onClick={this.onSubmit}
+          >
+            <span style={{ fontSize: "1.25vw" }}>Sign Up</span>
+          </Button>
+
+          <Button
+            icon="google"
+            size="large"
+            disabled
+            style={{ width: "75%", marginBottom: "20px" }}
+          >
+            <span style={{ fontSize: "1.25vw" }}>Sign Up with google</span>
+          </Button>
+        </Card>
+      </Spin>
     );
   }
 }
