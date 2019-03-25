@@ -29,6 +29,7 @@
     "express-jwt": "^5.3.1",
     "jsonwebtoken": "^8.5.0",
     "mongoose": "^5.4.15",
+    "nodemailer": "^5.1.1",
     "nodemon": "^1.18.10"
   }
 }

@@ -3,6 +3,7 @@ import React from "react";
 import { Input, Button, Icon, Card, Divider, message, Spin } from "antd";
 import PropTypes from "prop-types";
 import axios from "axios";
+import ForgotPassword from "./forgot";
 
 class Login extends Component {
   constructor(props) {
@@ -17,7 +18,8 @@ class Login extends Component {
         value: ""
       },
       error: "",
-      loading: false
+      loading: false,
+      forgotToggle: false
     };
 
     this.handlePasswordChange = this.handlePasswordChange.bind(this);
@@ -96,82 +98,92 @@ class Login extends Component {
     ) : null;
 
     return (
-      <Spin spinning={this.state.loading}>
-        <Card
-          bodyStyle={{ color: "rgb(0,0,0)" }}
-          hoverable
-          bordered={false}
-          style={this.props.style}
-        >
-          <h1>Log In</h1>
+      <>
+        <ForgotPassword
+          onCancel={() => {
+            this.setState({ forgotToggle: false });
+          }}
+          visible={this.state.forgotToggle}
+        />
 
-          <Input
-            style={{ width: "75%", marginBottom: "20px" }}
-            id="username"
-            size="large"
-            placeholder="Username"
-            prefix={<Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />}
-            suffix={suffix}
-            value={this.state.username.value}
-            onChange={this.handleUserNameChange}
-          />
-
-          <br />
-
-          <Input.Password
-            style={{ width: "75%", marginBottom: "30px" }}
-            id="password"
-            size="large"
-            placeholder="Password"
-            prefix={<Icon type="lock" style={{ color: "rgba(0,0,0,.25)" }} />}
-            visibilityToggle={true}
-            value={this.state.password.value}
-            onChange={this.handlePasswordChange}
-          />
-
-          <br />
-
-          <Button
-            disabled={
-              this.state.username.isValidated &&
-              this.state.password.value.length
-                ? false
-                : true
-            }
-            size="large"
-            style={{ width: "75%", marginBottom: "20px" }}
-            type="primary"
-            onClick={this.onSubmit}
+        <Spin spinning={this.state.loading}>
+          <Card
+            bodyStyle={{ color: "rgb(0,0,0)" }}
+            hoverable
+            bordered={false}
+            style={this.props.style}
           >
-            Log In
-          </Button>
+            <h1>Log In</h1>
 
-          <Divider style={{ width: "60%" }}>
-            <strong>OR</strong>
-          </Divider>
+            <Input
+              style={{ width: "75%", marginBottom: "20px" }}
+              id="username"
+              size="large"
+              placeholder="Username"
+              prefix={<Icon type="user" style={{ color: "rgba(0,0,0,.25)" }} />}
+              suffix={suffix}
+              value={this.state.username.value}
+              onChange={this.handleUserNameChange}
+            />
 
-          <Button
-            icon="google"
-            size="large"
-            disabled
-            style={{ width: "75%", marginBottom: "20px" }}
-            href=""
-          >
-            <span style={{ fontSize: "1.25vw" }}>Log In with google</span>
-          </Button>
+            <br />
 
-          <br />
+            <Input.Password
+              style={{ width: "75%", marginBottom: "30px" }}
+              id="password"
+              size="large"
+              placeholder="Password"
+              prefix={<Icon type="lock" style={{ color: "rgba(0,0,0,.25)" }} />}
+              visibilityToggle={true}
+              value={this.state.password.value}
+              onChange={this.handlePasswordChange}
+            />
 
-          <Button
-            size="large"
-            style={{ width: "75%", marginBottom: "20px" }}
-            href=""
-            disabled
-          >
-            <span style={{ fontSize: "1.25vw" }}>Forgot Password</span>
-          </Button>
-        </Card>
-      </Spin>
+            <br />
+
+            <Button
+              disabled={
+                this.state.username.isValidated &&
+                this.state.password.value.length
+                  ? false
+                  : true
+              }
+              size="large"
+              style={{ width: "75%", marginBottom: "20px" }}
+              type="primary"
+              onClick={this.onSubmit}
+            >
+              Log In
+            </Button>
+
+            <Divider style={{ width: "60%" }}>
+              <strong>OR</strong>
+            </Divider>
+
+            <Button
+              icon="google"
+              size="large"
+              disabled
+              style={{ width: "75%", marginBottom: "20px" }}
+              href=""
+            >
+              <span style={{ fontSize: "1.25vw" }}>Log In with google</span>
+            </Button>
+
+            <br />
+
+            <Button
+              size="large"
+              style={{ width: "75%", marginBottom: "20px" }}
+              onClick={() => {
+                this.setState({ forgotToggle: true });
+              }}
+            >
+              <span style={{ fontSize: "1.25vw" }}>Forgot Password</span>
+            </Button>
+          </Card>
+        </Spin>
+      </>
     );
   }
 }
