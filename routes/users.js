@@ -97,7 +97,7 @@ router.post('/register', auth.optional, (req, res) => {
     })
 });
 
-router.post('/forgot', auth.optional, async (req, res) => {
+router.post('/forgot', async (req, res) => {
     try {
         let user = await UserModel.findOne({
             username: req.body.username
@@ -107,6 +107,8 @@ router.post('/forgot', auth.optional, async (req, res) => {
             res.sendStatus(401)
             return;
         }
+
+        // TODO: Add sending email
 
         let passwordChangeReq = new PasswordChange()
         passwordChangeReq.user_id = user._id
@@ -153,6 +155,30 @@ router.post('/recover/:link', async (req, res) => {
         res.sendStatus(500)
     }
 })
+
+router.get('/recover/:link', async (req, res) => {
+
+    let link = req.params.link;
+    try {
+        let changeReq = await PasswordChange.findOne({
+            link: link
+        })
+        if (!changeReq) {
+            res.sendStatus(404)
+            return;
+        } else if (changeReq.isExpired()) {
+            res.sendStatus(401);
+            return;
+        } else {
+            let user = await UserModel.findById(changeReq.user_id)
+            return res.json({
+                user: user.name
+            }).status(200)
+        }
+    } catch (e) {
+        res.sendStatus(500);
+    }
+});
 
 
 router.get('/verify', auth.required, (req, res) => {

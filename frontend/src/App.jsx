@@ -8,7 +8,7 @@ import {
 
 import LandingPage from "./routes/landing";
 import HomePage from "./routes/home";
-
+import RecoverPassword from "./routes/recover";
 import withAuth from "./utils/auth";
 
 class App extends Component {
@@ -18,7 +18,7 @@ class App extends Component {
         <Switch>
           <Route exact path="/" component={LandingPage} />
           <Route exact path="/home" component={withAuth(HomePage)} />
-
+          <Route path="/recover/:key" component={RecoverPassword} />
           <Route // logout
             exact
             path="/logout"
