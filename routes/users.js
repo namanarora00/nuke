@@ -4,6 +4,7 @@ const auth = require('../utils/auth');
 const jwt = require('jsonwebtoken')
 const UserModel = require('../models/userModel');
 const PasswordChange = require('../models/password_change')
+const sendRecoveryMail = require('../utils/email')
 
 // Middlewares
 
@@ -108,13 +109,13 @@ router.post('/forgot', async (req, res) => {
             return;
         }
 
-        // TODO: Add sending email
-
         let passwordChangeReq = new PasswordChange()
         passwordChangeReq.user_id = user._id
         passwordChangeReq.generateLink()
         await passwordChangeReq.save();
+        sendRecoveryMail(passwordChangeReq.link, user.email)
         res.sendStatus(200)
+
     } catch (err) {
         res.sendStatus(500)
     }
