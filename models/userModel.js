@@ -23,7 +23,14 @@ let UserSchema = mongoose.Schema({
         unique: true
     },
     salt: String,
-    hash: String // this is the hashed password for a user.
+    hash: String,
+    topics: [{
+        topic: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'topic',
+        },
+        react: Number // 0 - HATE | 1 - NEUTRAL| 2 - LIKE
+    }]
 }, {
     timestamps: true
 });

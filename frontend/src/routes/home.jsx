@@ -1,9 +1,14 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
+import Topics from "../components/topics";
 
 class HomePage extends Component {
   render() {
-    return <h1>Welcome to home</h1>;
+    return (
+      <>
+        <Topics />
+      </>
+    );
   }
 }
 

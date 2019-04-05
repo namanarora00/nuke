@@ -1,6 +1,6 @@
 const express = require('express');
 const connect = require('./utils/mongoose');
-const users = require('./routes/users');
+const api = require('./routes/index');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
@@ -36,17 +36,17 @@ app.use(bodyParser.urlencoded({
 app.use('/static', express.static('public'));
 
 // routes
-app.use('/api/user', users)
+app.use('/api', api)
 
-// set a static folder
-// SHOULD BE USED ONLY FOR PRODUCTION
+
 if (process.env.NODE_ENV === 'production') {
     app.use(express.static(path.join(__dirname, "frontend", "build")))
     app.get('*', (req, res) => {
         res.sendFile(path.join(__dirname, 'frontend', 'build', 'index.html'));
     });
 }
-// 404
+
+
 app.use((req, res, next) => {
     return res.status(404).json({
         message: "Couldn't find the resource",

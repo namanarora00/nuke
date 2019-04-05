@@ -1,85 +1,44 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../utils/auth');
-const jwt = require('jsonwebtoken')
 const UserModel = require('../models/userModel');
 const PasswordChange = require('../models/password_change')
 const sendRecoveryMail = require('../utils/email')
 
-// Middlewares
 
-function errorHandler(err, req, res, next) {
-    if (typeof (err) === 'string') {
-        // custom application error
-        return res.status(400).json({
-            message: err
-        });
-    }
-
-    if (err.name === 'UnauthorizedError') {
-        // jwt authentication error
-        console.log("Auth error")
-        return res.status(401).json({
-            message: 'Invalid Token'
-        });
-    }
-
-    // default to 500 server error
-    return res.status(500).json({
-        message: err.message
-    });
-}
-
-async function currentUser(req, res, next) {
-
-    if (req.headers.authorization)
-        try {
-            const token = req.headers.authorization.split(' ')[1]
-            const key = 'Where there is a will, there is a way'
-            const id = jwt.decode(token, key).id
-
-            let user = await UserModel.findById(id)
-            req.user = user
-            next();
-        } catch (e) {
-            next(new Error(e))
-        }
-    else
-        next()
-}
-
-router.use(currentUser)
-
-// Routes
-
-router.post('/login', auth.optional, (req, res) => {
+router.post('/login', auth.optional, async (req, res) => {
     let data = req.body;
-    return UserModel.findOne({
-        username: data.username
-    }).then(doc => {
-        if (doc.validatePassword(data.password)) {
+    try {
+        let user = await UserModel.findOne({
+            username: data.username
+        })
+
+        if (user && user.validatePassword(data.password)) {
             return res.json({
-                token: doc.toAuthJSON().token
+                token: user.toAuthJSON().token
             })
         } else {
             return res.json({
                 "message": "Incorrect username or password"
             });
         }
-    }).catch(err => {
-        res.sendStatus(500)
-    })
+    } catch (e) {
+        throw new Error(e)
+    }
+
 })
 
-router.post('/register', auth.optional, (req, res) => {
+router.post('/register', auth.optional, async (req, res) => {
 
     let data = req.body;
     let newUser = new UserModel(data);
 
-    return UserModel.findOne({
-        username: data.username
-    }).then(doc => {
-        if (doc) {
+    try {
+        let doesExist = await UserModel.findOne({
+            username: data.username
+        })
+
+        if (doesExist) {
             return res.status(401).json({
                 message: "username already exists"
             })
@@ -87,15 +46,15 @@ router.post('/register', auth.optional, (req, res) => {
             let password = data.password;
 
             newUser.setPassword(password);
-            newUser.save()
-                .then(doc => {
-                    res.status(200).json(doc);
-                })
-                .catch(error => {
-                    res.sendStatus(500)
-                });
+            let s = await newUser.save()
+            if (s)
+                return res.sendStatus(200)
+            else
+                return res.sendStatus(500)
         }
-    })
+    } catch (e) {
+        throw new Error(e)
+    }
 });
 
 router.post('/forgot', async (req, res) => {
@@ -186,5 +145,5 @@ router.get('/verify', auth.required, (req, res) => {
     res.sendStatus(200);
 })
 
-router.use(errorHandler)
+
 module.exports = router;
