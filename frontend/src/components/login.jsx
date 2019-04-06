@@ -161,18 +161,6 @@ class Login extends Component {
             </Divider>
 
             <Button
-              icon="google"
-              size="large"
-              disabled
-              style={{ width: "75%", marginBottom: "20px" }}
-              href=""
-            >
-              <span style={{ fontSize: "1.25vw" }}>Log In with google</span>
-            </Button>
-
-            <br />
-
-            <Button
               size="large"
               style={{ width: "75%", marginBottom: "20px" }}
               onClick={() => {

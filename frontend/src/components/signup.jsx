@@ -228,9 +228,7 @@ class SignUp extends Component {
               this.handleFieldChange("password", e);
             }}
           />
-
           <br />
-
           <Button
             disabled={!this.areAllValidated()}
             size="large"
@@ -238,15 +236,6 @@ class SignUp extends Component {
             onClick={this.onSubmit}
           >
             <span style={{ fontSize: "1.25vw" }}>Sign Up</span>
-          </Button>
-
-          <Button
-            icon="google"
-            size="large"
-            disabled
-            style={{ width: "75%", marginBottom: "20px" }}
-          >
-            <span style={{ fontSize: "1.25vw" }}>Sign Up with google</span>
           </Button>
         </Card>
       </Spin>

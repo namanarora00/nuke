@@ -43,42 +43,51 @@ class LandingPage extends Component {
       return <Redirect to={"/home"} />;
     }
     return (
-      <Card
-        style={{
-          textAlign: "center",
-          marginTop: "5%",
-          marginLeft: "10%",
-          marginRight: "10%",
-          height: ""
-        }}
-        bordered={true}
-      >
-        <Row gutter={0}>
-          <Col span={12}>
-            <LoadLogin
-              afterLogin={() => {
-                this.forceUpdate();
-              }}
-              style={{
-                marginTop: "5%",
-                textAlign: "center",
-                marginRight: "0.75%",
-                marginBottom: "5%"
-              }}
-            />
-          </Col>
-          <Col span={12}>
-            <LoadSignup
-              location={this.state.location}
-              style={{
-                marginTop: "5%",
-                textAlign: "center",
-                marginLeft: "0.75%"
-              }}
-            />
-          </Col>
-        </Row>
-      </Card>
+      <div>
+        <Card
+          style={{
+            textAlign: "center",
+            marginTop: "5%",
+            marginLeft: "10%",
+            marginRight: "10%",
+            height: ""
+          }}
+          bordered={true}
+        >
+          <h1
+            style={{
+              fontFamily: "helvetica"
+            }}
+          >
+            NuKE
+          </h1>
+          <Row gutter={0}>
+            <Col span={12}>
+              <LoadLogin
+                afterLogin={() => {
+                  this.forceUpdate();
+                }}
+                style={{
+                  marginTop: "5%",
+                  textAlign: "center",
+                  marginRight: "0.75%",
+                  marginBottom: "5%"
+                }}
+              />
+            </Col>
+            <Col span={12}>
+              <LoadSignup
+                location={this.state.location}
+                style={{
+                  marginTop: "5%",
+                  textAlign: "center",
+                  marginLeft: "0.75%"
+                }}
+              />
+            </Col>
+          </Row>
+        </Card>
+      </div>
     );
   }
 }
