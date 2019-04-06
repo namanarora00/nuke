@@ -4,6 +4,7 @@ const auth = require('../utils/auth');
 const UserModel = require('../models/userModel');
 const PasswordChange = require('../models/password_change')
 const sendRecoveryMail = require('../utils/email')
+const currentUser = require("./middleware").currentUser;
 
 
 router.post('/login', auth.optional, async (req, res) => {
@@ -140,6 +141,21 @@ router.get('/recover/:link', async (req, res) => {
     }
 });
 
+router.put('/location', auth.required, currentUser, async (req, res) => {
+
+    let location = req.body.location;
+
+    let geoJson = {
+        type: "Point",
+        coordinates: [location.longitude, location.latitude]
+    }
+    let user = req.user
+
+    user.location = geoJson;
+    await user.save();
+    console.log(user.location)
+    return res.sendStatus(200);
+})
 
 router.get('/verify', auth.required, (req, res) => {
     res.sendStatus(200);

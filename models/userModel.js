@@ -24,6 +24,12 @@ let UserSchema = mongoose.Schema({
     },
     salt: String,
     hash: String,
+    location: {
+        type: {
+            type: String
+        },
+        coordinates: [Number],
+    },
     topics: [{
         topic: {
             type: mongoose.Schema.Types.ObjectId,
@@ -33,6 +39,10 @@ let UserSchema = mongoose.Schema({
     }]
 }, {
     timestamps: true
+});
+
+UserSchema.index({
+    location: '2dsphere'
 });
 
 UserSchema.methods.setPassword = function (password) {
