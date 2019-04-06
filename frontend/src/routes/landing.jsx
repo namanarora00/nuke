@@ -1,6 +1,6 @@
 import { Component } from "react";
 import React from "react";
-import { Card, Col, Row } from "antd";
+import { Card, Col, Row, message } from "antd";
 import { withRouter, Redirect } from "react-router-dom";
 
 import Loadable from "react-loadable";
@@ -16,6 +16,28 @@ const LoadSignup = Loadable({
 });
 
 class LandingPage extends Component {
+  constructor() {
+    super();
+    this.state = { location: {} };
+  }
+
+  componentWillMount() {
+    const geolocation = navigator.geolocation;
+    geolocation.getCurrentPosition(
+      position => {
+        this.setState({
+          location: {
+            longitude: position.coords.longitude,
+            latitude: position.coords.latitude
+          }
+        });
+      },
+      () => {
+        message.error("Location access is required for the best experience");
+      }
+    );
+  }
+
   render() {
     if (sessionStorage.getItem("token")) {
       return <Redirect to={"/home"} />;
@@ -47,6 +69,7 @@ class LandingPage extends Component {
           </Col>
           <Col span={12}>
             <LoadSignup
+              location={this.state.location}
               style={{
                 marginTop: "5%",
                 textAlign: "center",

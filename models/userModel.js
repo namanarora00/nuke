@@ -35,7 +35,7 @@ let UserSchema = mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: 'topic',
         },
-        react: Number // 0 - HATE | 1 - NEUTRAL| 2 - LIKE
+        react: Number // -1 - HATE | 0 - NEUTRAL| 1 - LIKE
     }]
 }, {
     timestamps: true

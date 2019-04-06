@@ -47,6 +47,10 @@ router.post('/register', auth.optional, async (req, res) => {
             let password = data.password;
 
             newUser.setPassword(password);
+            newUser.location = {
+                type: "Point",
+                coordinates: [data.location.longitude, data.location.latitude]
+            }
             let s = await newUser.save()
             if (s)
                 return res.sendStatus(200)

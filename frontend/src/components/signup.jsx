@@ -89,6 +89,7 @@ class SignUp extends Component {
       if (field === "sex") formData[field] = this.state[field];
       else formData[field] = this.state[field].value;
     }
+    formData.location = this.props.location;
     this.setState({ loading: true });
     axios({
       method: "post",
