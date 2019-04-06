@@ -6,7 +6,13 @@ class HomePage extends Component {
   render() {
     return (
       <>
-        <Topics />
+        <Topics
+          style={{
+            marginTop: "10%",
+            marginLeft: "33%",
+            marginRight: "33%"
+          }}
+        />
       </>
     );
   }

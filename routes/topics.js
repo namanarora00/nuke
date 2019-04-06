@@ -25,9 +25,18 @@ router.get('/', async (req, res) => {
 })
 
 router.get('/react/:tid', async (req, res) => {
-    let typeOfReact = Number(req.query.type)
+    let typeOfReact = req.query.type
     if (!typeOfReact)
-        return res.status(404)
+        return res.status(400)
+
+    if (typeOfReact === "like")
+        typeOfReact = 1;
+    else if (typeOfReact === "dislike")
+        typeOfReact = -1;
+    else if (typeOfReact === "neutral")
+        typeOfReact = 0;
+    else
+        return res.status(400)
 
     const id = req.params.tid
     const topic = await Topic.findById(id)
@@ -37,7 +46,7 @@ router.get('/react/:tid', async (req, res) => {
 
     for (let t of user.topics)
         if (id == t.topic)
-            return res.status(200)
+            return res.status(200).json("done")
 
     user.topics.push({
         topic: topic._id,
@@ -45,8 +54,7 @@ router.get('/react/:tid', async (req, res) => {
     })
 
     await user.save()
-    return res.status(200)
-
+    return res.status(200).json("done")
 })
 
 router.get('/history', async (req, res) => {
@@ -54,7 +62,7 @@ router.get('/history', async (req, res) => {
     let user = await UserModel.populate(req.user, {
         path: "topics.topic",
         select: "name"
-    })
+    }).catch(err => res.send(500))
 
     let history = {}
 
@@ -64,5 +72,20 @@ router.get('/history', async (req, res) => {
 
     return res.json(history)
 })
+
+
+router.post('/create', async (req, res) => {
+    let name = req.body.name;
+    if (!name)
+        return res.status(400)
+
+    let newTopic = await Topic.create({
+        name
+    }).catch(err => {
+        res.status(500)
+    })
+    return res.json(newTopic);
+})
+
 
 module.exports = router

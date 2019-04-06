@@ -8,9 +8,8 @@ class Topics extends Component {
     this.state = {
       topics: [],
       loading: true,
-      current: 0,
       failed: false,
-      intervalID: ""
+      current: -1
     };
 
     this.getTopics = this.getTopics.bind(this);
@@ -22,6 +21,7 @@ class Topics extends Component {
   }
 
   getTopics() {
+    this.setState({ loading: true });
     axios({
       url: "/api/topic/",
       method: "GET",
@@ -31,22 +31,33 @@ class Topics extends Component {
     })
       .then(res => {
         let data = res.data;
-
-        this.setState({ topics: data, loading: false });
+        if (!data.length) {
+          setTimeout(this.getTopics, 8000);
+        }
+        this.setState({
+          topics: data,
+          loading: false,
+          failed: false,
+          current: data.length - 1
+        });
       })
       .catch(err => {
-        console.log(err);
+        this.setState({ loading: false, failed: true });
+        message.error("Could not retrieve topics");
       });
   }
 
-  reactToTopic(reactType) {
-    if (this.state.loading || !this.state.topics.length) return;
+  async reactToTopic(reactType) {
+    const { loading, topics, failed, current } = this.state;
+    if (loading || !topics.length || failed) return;
 
-    const { current, topics } = this.state;
-    const url = `/api/topic/react/${topics[current]._id}?type=${reactType}`;
+    let url = `/api/topic/react/${topics[current]._id}?type=`;
+    if (reactType === 0) url += "neutral";
+    else if (reactType === 1) url += "like";
+    else url += "dislike";
 
-    axios({
-      url,
+    await axios({
+      url: url,
       method: "GET",
       headers: {
         Authorization: "Token " + sessionStorage.getItem("token")
@@ -55,25 +66,21 @@ class Topics extends Component {
       message.error("An error ocurred while reacting");
     });
 
-    let next = current + 1;
+    // remove the current topic
+    topics.pop();
+    this.setState({ topics: topics, current: topics.length - 1 });
 
-    if (next === topics.length) {
-      this.setState({ loading: true, current: 0, topics: [] });
+    // fetch new topics
+    if (topics.length === 0) {
+      this.setState({ loading: true, current: -1, topics: [] });
       this.getTopics();
-    } else {
-      this.setState({ current: next });
     }
   }
 
   render() {
+    const { topics, failed, loading, current } = this.state;
     return (
-      <div
-        style={{
-          marginTop: "10%",
-          marginLeft: "33%",
-          marginRight: "33%"
-        }}
-      >
+      <div style={this.props.style}>
         <Card
           cover={
             <div
@@ -90,14 +97,15 @@ class Topics extends Component {
                   msUserSelect: "none"
                 }}
               >
-                {this.state.loading ? (
+                {loading && !failed ? (
                   <Icon type="loading" />
-                ) : this.state.topics.length ? (
-                  this.state.topics[this.state.current].name.toUpperCase()
+                ) : topics.length ? (
+                  topics[current].name.toUpperCase()
                 ) : (
-                  "You're all caught up!"
+                  <>{!failed && "You're all caught up!"}</>
                 )}
               </h1>
+              {failed && <h1> 404 </h1>}
             </div>
           }
           actions={[
