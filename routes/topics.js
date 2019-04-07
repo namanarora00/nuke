@@ -36,17 +36,17 @@ router.get('/react/:tid', async (req, res) => {
     else if (typeOfReact === "neutral")
         typeOfReact = 0;
     else
-        return res.status(400)
+        return res.sendStatus(400)
 
     const id = req.params.tid
     const topic = await Topic.findById(id)
     let user = req.user
     if (!topic)
-        return res.status(404)
+        return res.sendStatus(404)
 
     for (let t of user.topics)
         if (id == t.topic)
-            return res.status(200).json("done")
+            return res.sendStatus(200)
 
     user.topics.push({
         topic: topic._id,
@@ -54,7 +54,7 @@ router.get('/react/:tid', async (req, res) => {
     })
 
     await user.save()
-    return res.status(200).json("done")
+    return res.sendStatus(200)
 })
 
 router.get('/history', async (req, res) => {
@@ -62,7 +62,7 @@ router.get('/history', async (req, res) => {
     let user = await UserModel.populate(req.user, {
         path: "topics.topic",
         select: "name"
-    }).catch(err => res.send(500))
+    }).catch(err => res.sendStatus(500))
 
     let history = {}
 
@@ -77,12 +77,12 @@ router.get('/history', async (req, res) => {
 router.post('/create', async (req, res) => {
     let name = req.body.name;
     if (!name)
-        return res.status(400)
+        return res.sendStatus(400)
 
     let newTopic = await Topic.create({
         name
     }).catch(err => {
-        res.status(500)
+        res.sendStatus(500)
     })
     return res.json(newTopic);
 })

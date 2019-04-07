@@ -30,6 +30,17 @@ let UserSchema = mongoose.Schema({
         },
         coordinates: [Number],
     },
+    history: [{
+        user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "user"
+        },
+        status: Number, // -1 Blocked | 0 disliked | 1 liked
+        matched: {
+            type: Boolean,
+            default: false
+        }
+    }],
     topics: [{
         topic: {
             type: mongoose.Schema.Types.ObjectId,

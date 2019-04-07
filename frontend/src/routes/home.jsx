@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import Topics from "../components/topics";
+import Recommendations from "../components/users";
 import { message } from "antd";
 import axios from "axios";
 class HomePage extends Component {
@@ -37,9 +38,16 @@ class HomePage extends Component {
   render() {
     return (
       <>
+        <Recommendations
+          style={{
+            marginTop: "2%",
+            marginLeft: "33%",
+            marginRight: "33%"
+          }}
+        />
         <Topics
           style={{
-            marginTop: "10%",
+            marginTop: "1%",
             marginLeft: "33%",
             marginRight: "33%"
           }}
