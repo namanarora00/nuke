@@ -116,18 +116,17 @@ class SignUp extends Component {
       <Spin spinning={this.state.loading}>
         <Card
           bodyStyle={{ color: "rgb(0,0,0)" }}
-          hoverable
           bordered={false}
           style={this.props.style}
         >
-          <h1>Sign Up</h1>
+          <h1 style={{ fontFamily: "helvetica" }}>Sign Up</h1>
 
           <Input
             id="name"
             value={this.state.name.value}
             style={{
-              width: "75%",
-              marginBottom: "20px",
+              width: "80%",
+              marginBottom: "5%",
               borderColor:
                 !this.state.name.isValidated && this.state.name.value
                   ? "red"
@@ -144,8 +143,8 @@ class SignUp extends Component {
             id="email"
             value={this.state.email.value}
             style={{
-              width: "75%",
-              marginBottom: "20px",
+              width: "80%",
+              marginBottom: "5%",
               borderColor:
                 !this.state.email.isValidated && this.state.email.value
                   ? "red"
@@ -170,8 +169,8 @@ class SignUp extends Component {
                   ? "red"
                   : "",
               display: "inline-block",
-              width: "37.5%",
-              marginBottom: "20px"
+              width: "40%",
+              marginBottom: "5%"
             }}
           />
 
@@ -182,8 +181,8 @@ class SignUp extends Component {
             }}
             style={{
               display: "inline-block",
-              width: "37.5%",
-              marginBottom: "20px"
+              width: "40%",
+              marginBottom: "7.5%"
             }}
           >
             <Radio size="large" value="male">
@@ -199,9 +198,9 @@ class SignUp extends Component {
             value={this.state.username.value}
             style={{
               display: "inline-block",
-              width: "36%",
+              width: "38.5%",
               marginRight: "3%",
-              marginBottom: "20px",
+              marginBottom: "5%",
               borderColor:
                 !this.state.username.isValidated && this.state.username.value
                   ? "red"
@@ -219,8 +218,8 @@ class SignUp extends Component {
             value={this.state.password.value}
             style={{
               display: "inline-block",
-              width: "36%",
-              marginBottom: "20px"
+              width: "38.5%",
+              marginBottom: "5%"
             }}
             size="large"
             placeholder="Password"
@@ -232,7 +231,8 @@ class SignUp extends Component {
           <Button
             disabled={!this.areAllValidated()}
             size="large"
-            style={{ width: "75%", marginBottom: "20px" }}
+            shape="round"
+            style={{ width: "80%", marginBottom: "5%" }}
             onClick={this.onSubmit}
           >
             <span style={{ fontSize: "1.25vw" }}>Sign Up</span>

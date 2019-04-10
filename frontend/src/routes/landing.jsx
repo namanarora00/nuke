@@ -1,7 +1,8 @@
 import { Component } from "react";
 import React from "react";
-import { Card, Col, Row, message } from "antd";
+import { Card, Col, Row, message, Icon } from "antd";
 import { withRouter, Redirect } from "react-router-dom";
+import Helmet from "react-helmet";
 
 import Loadable from "react-loadable";
 
@@ -18,7 +19,7 @@ const LoadSignup = Loadable({
 class LandingPage extends Component {
   constructor() {
     super();
-    this.state = { location: {} };
+    this.state = { location: {}, login: true };
   }
 
   componentWillMount() {
@@ -29,7 +30,8 @@ class LandingPage extends Component {
           location: {
             longitude: position.coords.longitude,
             latitude: position.coords.latitude
-          }
+          },
+          login: true
         });
       },
       () => {
@@ -43,45 +45,82 @@ class LandingPage extends Component {
       return <Redirect to={"/home"} />;
     }
     return (
-      <div>
+      <div
+        style={{
+          zoom: 1.15
+        }}
+      >
+        <Helmet>
+          <style>{"body { background-color:#fa8072; }"}</style>
+        </Helmet>
         <Card
           style={{
+            borderRadius: "5px",
             textAlign: "center",
             marginTop: "5%",
-            marginLeft: "10%",
-            marginRight: "10%",
-            height: ""
+            marginLeft: "15%",
+            marginRight: "15%"
           }}
           bordered={true}
         >
-          <h1
-            style={{
-              fontFamily: "helvetica"
-            }}
-          >
-            NuKE
-          </h1>
-          <Row gutter={0}>
+          <Row gutter={-10}>
             <Col span={12}>
-              <LoadLogin
-                afterLogin={() => {
-                  this.forceUpdate();
-                }}
+              <div
                 style={{
-                  marginTop: "5%",
+                  marginLeft: "-20%",
                   textAlign: "center",
-                  marginRight: "0.75%",
-                  marginBottom: "5%"
+                  marginBottom: "-10%"
                 }}
-              />
+              >
+                <img
+                  style={{
+                    borderRadius: "5px",
+                    display: "block",
+                    height: "auto",
+                    width: "auto",
+                    maxWidth: "650px",
+                    maxHeight: "650px",
+                    objectFit: "scale-down",
+                    objectPosition: "-500% 0"
+                  }}
+                  src="/static/landing/landing.png"
+                  alt="not found lol"
+                />
+              </div>
             </Col>
-            <Col span={12}>
-              <LoadSignup
-                location={this.state.location}
+
+            <Col span={11}>
+              {!this.state.login && (
+                <LoadSignup
+                  location={this.state.location}
+                  style={{
+                    marginTop: "0.5%",
+                    textAlign: "center",
+                    marginRight: "-10%"
+                  }}
+                />
+              )}
+              {this.state.login && (
+                <LoadLogin
+                  afterLogin={() => {
+                    this.forceUpdate();
+                  }}
+                  style={{
+                    marginTop: "0.5%",
+                    textAlign: "center",
+                    marginRight: "-10%"
+                  }}
+                />
+              )}
+            </Col>
+            <Col span={1}>
+              <Icon
+                type={this.state.login ? "user-add" : "user"}
                 style={{
-                  marginTop: "5%",
-                  textAlign: "center",
-                  marginLeft: "0.75%"
+                  fontSize: "20px"
+                }}
+                onClick={() => {
+                  this.setState({ login: !this.state.login });
                 }}
               />
             </Col>

@@ -109,14 +109,13 @@ class Login extends Component {
         <Spin spinning={this.state.loading}>
           <Card
             bodyStyle={{ color: "rgb(0,0,0)" }}
-            hoverable
             bordered={false}
             style={this.props.style}
           >
-            <h1>Log In</h1>
+            <h1 style={{ fontFamily: "helvetica" }}>Log In</h1>
 
             <Input
-              style={{ width: "75%", marginBottom: "20px" }}
+              style={{ width: "80%", marginBottom: "20px" }}
               id="username"
               size="large"
               placeholder="Username"
@@ -129,7 +128,7 @@ class Login extends Component {
             <br />
 
             <Input.Password
-              style={{ width: "75%", marginBottom: "30px" }}
+              style={{ width: "80%", marginBottom: "30px" }}
               id="password"
               size="large"
               placeholder="Password"
@@ -149,7 +148,8 @@ class Login extends Component {
                   : true
               }
               size="large"
-              style={{ width: "75%", marginBottom: "20px" }}
+              shape="round"
+              style={{ width: "80%", marginBottom: "20px" }}
               type="primary"
               onClick={this.onSubmit}
             >
@@ -162,7 +162,8 @@ class Login extends Component {
 
             <Button
               size="large"
-              style={{ width: "75%", marginBottom: "20px" }}
+              shape="round"
+              style={{ width: "80%", marginBottom: "20px" }}
               onClick={() => {
                 this.setState({ forgotToggle: true });
               }}

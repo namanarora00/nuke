@@ -36,7 +36,7 @@ app.use(bodyParser.urlencoded({
 }));
 
 // static
-app.use('/static', express.static('public'));
+app.use('/static', express.static('static'));
 
 // routes
 app.use('/api', api)
