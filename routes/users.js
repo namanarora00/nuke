@@ -24,7 +24,7 @@ router.post('/login', auth.optional, async (req, res) => {
             });
         }
     } catch (e) {
-        throw new Error(e)
+        res.sendStatus(500)
     }
 
 })
@@ -58,7 +58,7 @@ router.post('/register', auth.optional, async (req, res) => {
                 return res.sendStatus(500)
         }
     } catch (e) {
-        throw new Error(e)
+        res.sendStatus(500);
     }
 });
 
@@ -114,7 +114,7 @@ router.post('/recover/:link', async (req, res) => {
                 })
                 res.sendStatus(200)
             } else
-                req.sendStatus(404)
+                req.sendStatus(400)
         }
     } catch (e) {
         res.sendStatus(500)
@@ -157,7 +157,7 @@ router.put('/location', auth.required, currentUser, async (req, res) => {
 
     user.location = geoJson;
     await user.save();
-    console.log(user.location)
+
     return res.sendStatus(200);
 })
 

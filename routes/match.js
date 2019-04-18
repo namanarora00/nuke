@@ -66,6 +66,7 @@ router.get('/react/:id/:type', async (req, res) => {
         status: typeOfReact
     }
 
+    // checks if the other user has also liked the current user
     let isPresent = await UserModel.find({
         _id: req.params.id,
         history: {

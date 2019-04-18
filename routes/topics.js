@@ -10,18 +10,25 @@ router.use(auth.required);
 router.use(currentUser);
 
 router.get('/', async (req, res) => {
-
     const topicHistory = req.user.topics.map(t => t.topic)
 
-    let topics = await Topic.find({
-        _id: {
-            $nin: topicHistory
-        }
-    }).limit(10).select({
-        name: 1,
-        _id: 1
-    }).exec()
-    res.json(topics)
+    try {
+        let topics = await Topic.find({
+                _id: {
+                    $nin: topicHistory
+                }
+            })
+            .limit(10).select({
+                name: 1,
+                _id: 1
+            })
+            .exec()
+
+        res.json(topics)
+    } catch (err) {
+        res.sendStatus(500);
+    }
+
 })
 
 router.get('/react/:tid', async (req, res) => {
@@ -39,38 +46,46 @@ router.get('/react/:tid', async (req, res) => {
         return res.sendStatus(400)
 
     const id = req.params.tid
-    const topic = await Topic.findById(id)
-    let user = req.user
-    if (!topic)
-        return res.sendStatus(404)
+    try {
+        const topic = await Topic.findById(id)
+        let user = req.user
+        if (!topic)
+            return res.sendStatus(404)
 
-    for (let t of user.topics)
-        if (id == t.topic)
-            return res.sendStatus(200)
+        for (let t of user.topics)
+            if (id == t.topic) // existing react to topic exists
+                return res.sendStatus(200)
 
-    user.topics.push({
-        topic: topic._id,
-        react: typeOfReact
-    })
+        user.topics.push({
+            topic: topic._id,
+            react: typeOfReact
+        })
 
-    await user.save()
-    return res.sendStatus(200)
+        await user.save()
+        return res.sendStatus(200)
+    } catch (err) {
+        res.sendStatus(500);
+    }
 })
 
 router.get('/history', async (req, res) => {
 
-    let user = await UserModel.populate(req.user, {
-        path: "topics.topic",
-        select: "name"
-    }).catch(err => res.sendStatus(500))
+    try {
+        let user = await UserModel.populate(req.user, {
+            path: "topics.topic",
+            select: "name"
+        })
 
-    let history = {}
+        let history = {}
 
-    history.dislikes = user.topics.filter(t => t.react === 0)
-    history.neutral = user.topics.filter(t => t.react === 1)
-    history.likes = user.topics.filter(t => t.react === 2)
+        history.dislikes = user.topics.filter(t => t.react === 0)
+        history.neutral = user.topics.filter(t => t.react === 1)
+        history.likes = user.topics.filter(t => t.react === 2)
 
-    return res.json(history)
+        return res.json(history)
+    } catch (err) {
+        res.sendStatus(500);
+    }
 })
 
 
@@ -79,12 +94,15 @@ router.post('/create', async (req, res) => {
     if (!name)
         return res.sendStatus(400)
 
-    let newTopic = await Topic.create({
-        name
-    }).catch(err => {
-        res.sendStatus(500)
-    })
-    return res.json(newTopic);
+    try {
+        let newTopic = await Topic.create({
+            name
+        })
+        res.json(newTopic);
+    } catch (err) {
+        res.sendStatus(500);
+    }
+
 })
 
 

@@ -23,9 +23,7 @@ function errorHandler(err, req, res, next) {
     });
 }
 
-/**
- * Should be used after authenticated
- */
+
 async function currentUser(req, res, next) {
     if (req.headers.authorization)
         try {
