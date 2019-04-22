@@ -112,7 +112,7 @@ class Login extends Component {
             bordered={false}
             style={this.props.style}
           >
-            <h1 style={{ fontFamily: "helvetica" }}>Log In</h1>
+            <h1 style={{ fontFamily: "Arial", fontSize: "40px" }}>Log In</h1>
 
             <Input
               style={{ width: "80%", marginBottom: "20px" }}
@@ -149,7 +149,10 @@ class Login extends Component {
               }
               size="large"
               shape="round"
-              style={{ width: "80%", marginBottom: "20px" }}
+              style={{
+                width: "80%",
+                marginBottom: "14px"
+              }}
               type="primary"
               onClick={this.onSubmit}
             >

@@ -119,7 +119,7 @@ class SignUp extends Component {
           bordered={false}
           style={this.props.style}
         >
-          <h1 style={{ fontFamily: "helvetica" }}>Sign Up</h1>
+          <h1 style={{ fontFamily: "Arial", fontSize: "40px" }}>Sign Up</h1>
 
           <Input
             id="name"

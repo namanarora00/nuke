@@ -3,8 +3,10 @@ import React from "react";
 import { Card, Col, Row, message, Icon } from "antd";
 import { withRouter, Redirect } from "react-router-dom";
 import Helmet from "react-helmet";
-
 import Loadable from "react-loadable";
+
+import logo from "../assets/landing/landing.png";
+import "../assets/common/css/fonts.css";
 
 const LoadLogin = Loadable({
   loader: () => import("../components/login"),
@@ -51,7 +53,7 @@ class LandingPage extends Component {
         }}
       >
         <Helmet>
-          <style>{"body { background-color:#fa8072; }"}</style>
+          <style>{"body { background-color:#33414C; }"}</style>
         </Helmet>
         <Card
           style={{
@@ -61,7 +63,7 @@ class LandingPage extends Component {
             marginLeft: "15%",
             marginRight: "15%"
           }}
-          bordered={true}
+          bordered={false}
         >
           <Row gutter={-10}>
             <Col span={12}>
@@ -78,14 +80,24 @@ class LandingPage extends Component {
                     display: "block",
                     height: "auto",
                     width: "auto",
-                    maxWidth: "650px",
-                    maxHeight: "650px",
+                    maxWidth: "400px",
+                    maxHeight: "400px",
                     objectFit: "scale-down",
-                    objectPosition: "-500% 0"
+                    marginLeft: "20%"
                   }}
-                  src="/static/landing/landing.png"
+                  src={logo}
                   alt="not found lol"
                 />
+                <p
+                  style={{
+                    fontFamily: "Kaushan Script, cursive",
+                    marginTop: "-5%",
+                    marginLeft: "15%",
+                    fontSize: "30px"
+                  }}
+                >
+                  "Love is not rocket science"
+                </p>
               </div>
             </Col>
 

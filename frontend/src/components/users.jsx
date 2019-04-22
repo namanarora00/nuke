@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { message, Card, Icon, Avatar, Tooltip } from "antd";
+import { message, Card, Icon, Avatar, Tooltip, Carousel, Button } from "antd";
+import logo from "../assets/landing/landing.png";
+
+import "../assets/home/css/carousel.css";
 
 class Recommendations extends Component {
   constructor() {
@@ -10,11 +13,13 @@ class Recommendations extends Component {
       users: [],
       loading: true,
       failed: false,
-      current: -1
+      current: -1,
+      currentImages: []
     };
 
     this.getUsers = this.getUsers.bind(this);
     this.reactToUser = this.reactToUser.bind(this);
+    this.getImages = this.getImages.bind(this);
   }
 
   componentDidMount() {
@@ -35,10 +40,13 @@ class Recommendations extends Component {
         this.setState({
           users: data,
           loading: false,
-          current: data.length - 1
+          current: data.length - 1,
+          currentImages: []
         });
         if (!data.length) {
           setTimeout(this.getUsers, 8000);
+        } else {
+          this.getImages(this.state.users[this.state.current]._id);
         }
       })
       .catch(err => {
@@ -46,6 +54,20 @@ class Recommendations extends Component {
         message.error("Could not fetch users!");
         this.setState({ failed: true, loading: false });
       });
+  }
+
+  getImages(uid) {
+    axios({
+      url: "/api/image/fetch/" + uid,
+      method: "get",
+      headers: {
+        Authorization: "Token " + sessionStorage.getItem("token")
+      }
+    })
+      .then(res => {
+        this.setState({ currentImages: res.data });
+      })
+      .catch(err => message.error("Could not load images for the user"));
   }
 
   async reactToUser(reactType) {
@@ -74,6 +96,8 @@ class Recommendations extends Component {
     if (users.length === 0) {
       this.setState({ loading: true, current: -1, users: [] });
       this.getUsers();
+    } else {
+      this.getImages(this.state.users[this.state.current]._id);
     }
   }
 
@@ -85,10 +109,28 @@ class Recommendations extends Component {
           cover={
             !loading &&
             users.length && (
-              <img
-                alt="Avatar"
-                src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
-              />
+              <Carousel>
+                {this.state.currentImages.map(i => {
+                  return (
+                    <div>
+                      <img
+                        style={{
+                          display: "block",
+                          height: "auto",
+                          width: "auto",
+                          maxWidth: "100%",
+                          maxHeight: "50%",
+                          objectFit: "scale-down",
+                          textAlign: "center"
+                        }}
+                        src={i.src}
+                        alt=""
+                        key={i.dateUpload}
+                      />
+                    </div>
+                  );
+                })}
+              </Carousel>
             )
           }
           actions={[
@@ -123,7 +165,7 @@ class Recommendations extends Component {
           ) : loading ? (
             <Icon type="loading" />
           ) : (
-            <h3>Users not available.</h3>
+            <h3>We couldn't find any more users.</h3>
           )}
         </Card>
       </div>
