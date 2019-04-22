@@ -30,6 +30,12 @@ let UserSchema = mongoose.Schema({
         },
         coordinates: [Number],
     },
+    pictures: [{
+        image: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "image"
+        }
+    }],
     history: [{
         user: {
             type: mongoose.Schema.Types.ObjectId,
