@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { withRouter } from "react-router-dom";
+import { withRouter, Redirect } from "react-router-dom";
 import Topics from "../components/topics";
 import Recommendations from "../components/users";
 import Upload from "../components/upload";
@@ -13,7 +13,8 @@ class HomePage extends Component {
     this.state = {
       user: null,
       loading: false,
-      currentImages: []
+      currentImages: [],
+      logout: false
     };
 
     this.getUserData = this.getUserData.bind(this);
@@ -87,6 +88,7 @@ class HomePage extends Component {
   render() {
     return (
       <>
+        {this.state.logout ? <Redirect to="/logout" /> : ""}
         <Helmet>
           <style>{"body { background-color:#33414C; }"}</style>
         </Helmet>
@@ -121,7 +123,7 @@ class HomePage extends Component {
                   <Icon type="edit" />,
                   <Icon
                     type="close-circle"
-                    onClick={() => this.props.history.push("/logout")}
+                    onClick={() => this.setState({ logout: true })}
                   />
                 ]}
               >
