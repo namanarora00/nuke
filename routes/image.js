@@ -34,16 +34,19 @@ router.post('/upload', async (req, res) => {
     }
 });
 
-router.get('/fetch', async (req, res) => {
+router.get('/fetch/:uid', async (req, res) => {
     try {
-        const user = await UserModel.populate(req.user, {
+        let user = await UserModel.findById(req.params.uid);
+        user = await UserModel.populate(user, {
             path: "pictures.image",
-        })
+        });
+
         let images = user.pictures.map(i => i.image);
         res.json(images);
     } catch (e) {
         res.sendStatus(500);
     }
 })
+
 
 module.exports = router
