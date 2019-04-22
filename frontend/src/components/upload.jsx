@@ -5,25 +5,8 @@ import axios from "axios";
 class ImageUpload extends React.Component {
   state = {
     fileList: [],
-    upload: false,
-    images: []
+    upload: false
   };
-
-  componentDidMount() {
-    axios({
-      url: "/api/image/fetch",
-      method: "get",
-      headers: {
-        Authorization: "Token " + sessionStorage.getItem("token")
-      }
-    })
-      .then(res => {
-        this.setState({ images: res.data });
-      })
-      .catch(e => {
-        message.error("Could not get images");
-      });
-  }
 
   handleUpload = () => {
     const { fileList } = this.state;
@@ -94,16 +77,14 @@ class ImageUpload extends React.Component {
     };
 
     return (
-      <div
-        style={{
-          marginLeft: "33%"
-        }}
-      >
+      <div>
         <Upload {...props}>
-          <Button disabled={this.state.fileList.length >= 1 ? true : false}>
-            <Icon type="upload" />
+          <Icon
+            type="upload"
+            disabled={this.state.fileList.length >= 1 ? true : false}
+          >
             Select File
-          </Button>
+          </Icon>
         </Upload>
         <Button
           type="primary"

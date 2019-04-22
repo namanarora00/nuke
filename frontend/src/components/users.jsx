@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { message, Card, Icon, Avatar, Tooltip, Carousel, Button } from "antd";
-import logo from "../assets/landing/landing.png";
+import { message, Card, Icon, Avatar, Tooltip, Carousel } from "antd";
 
 import "../assets/home/css/carousel.css";
 
@@ -112,7 +111,7 @@ class Recommendations extends Component {
               <Carousel>
                 {this.state.currentImages.map(i => {
                   return (
-                    <div>
+                    <div key={new Date().getTime()}>
                       <img
                         style={{
                           display: "block",
@@ -125,7 +124,7 @@ class Recommendations extends Component {
                         }}
                         src={i.src}
                         alt=""
-                        key={i.dateUpload}
+                        key={new Date().getTime()}
                       />
                     </div>
                   );
@@ -156,9 +155,7 @@ class Recommendations extends Component {
         >
           {!loading && users.length ? (
             <Card.Meta
-              avatar={
-                <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
-              }
+              avatar={<Avatar icon="user" />}
               title={users[current].name}
               description="This app is cool"
             />

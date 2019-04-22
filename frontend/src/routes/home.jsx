@@ -2,11 +2,24 @@ import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import Topics from "../components/topics";
 import Recommendations from "../components/users";
-import { message, Tabs, Card } from "antd";
+import Upload from "../components/upload";
+import { message, Tabs, Card, Col, Row, Icon, Avatar, Carousel } from "antd";
 import axios from "axios";
 import Helmet from "react-helmet";
 
 class HomePage extends Component {
+  constructor() {
+    super();
+    this.state = {
+      user: null,
+      loading: false,
+      currentImages: []
+    };
+
+    this.getUserData = this.getUserData.bind(this);
+    this.getImages = this.getImages.bind(this);
+  }
+
   componentWillMount() {
     const geolocation = navigator.geolocation;
     geolocation.getCurrentPosition(
@@ -35,6 +48,40 @@ class HomePage extends Component {
         message.error("Location access is required for the best experience");
       }
     );
+    this.getUserData();
+  }
+
+  getImages() {
+    axios({
+      url: "/api/image/fetch/" + this.state.user._id,
+      method: "get",
+      headers: {
+        Authorization: "Token " + sessionStorage.getItem("token")
+      }
+    })
+      .then(res => {
+        this.setState({ loading: false });
+        this.setState({ currentImages: res.data });
+      })
+      .catch(err => message.error("Could not load images for the user"));
+  }
+
+  getUserData() {
+    this.setState({ loading: true });
+    axios({
+      url: "/api/user/data",
+      method: "get",
+      headers: {
+        Authorization: "Token " + sessionStorage.getItem("token")
+      }
+    })
+      .then(res => {
+        this.setState({ user: res.data });
+        this.getImages();
+      })
+      .catch(err => {
+        message.error("Could not get user");
+      });
   }
 
   render() {
@@ -43,28 +90,85 @@ class HomePage extends Component {
         <Helmet>
           <style>{"body { background-color:#33414C; }"}</style>
         </Helmet>
-
-        <Card
-          style={{
-            marginTop: "2%",
-            marginLeft: "33%",
-            marginRight: "33%"
-          }}
-        >
-          <Tabs
-            defaultActiveKey="1"
-            tabBarStyle={{
-              textAlign: "center"
-            }}
-          >
-            <Tabs.TabPane tab="Explore Users" key="1">
-              <Recommendations />
-            </Tabs.TabPane>
-            <Tabs.TabPane tab="Explore topics" key="2">
-              <Topics />
-            </Tabs.TabPane>
-          </Tabs>
-        </Card>
+        <div style={{ marginLeft: "10%", marginRight: "15%" }}>
+          <Row gutter={6}>
+            <Col span={13}>
+              <Card
+                style={{
+                  marginTop: "10%"
+                }}
+              >
+                <Tabs
+                  defaultActiveKey="1"
+                  tabBarStyle={{
+                    textAlign: "center"
+                  }}
+                >
+                  <Tabs.TabPane tab="Explore Users" key="1">
+                    <Recommendations />
+                  </Tabs.TabPane>
+                  <Tabs.TabPane tab="Explore topics" key="2">
+                    <Topics />
+                  </Tabs.TabPane>
+                </Tabs>
+              </Card>
+            </Col>
+            <Col span={11}>
+              <Card
+                style={{ height: "25%", marginTop: "11.9%" }}
+                actions={[
+                  <Icon type="setting" />,
+                  <Icon type="edit" />,
+                  <Icon
+                    type="close-circle"
+                    onClick={() => this.props.history.push("/logout")}
+                  />
+                ]}
+              >
+                <Card.Meta
+                  avatar={<Avatar icon="user" />}
+                  title={this.state.user ? this.state.user.name : "Jordan"}
+                  description="This app is cool"
+                />
+              </Card>
+              <Card
+                style={{ marginTop: "3%" }}
+                cover={
+                  !this.state.loading &&
+                  this.state.user && (
+                    <Carousel>
+                      {this.state.currentImages.map(i => {
+                        return (
+                          <div key={new Date().getTime()}>
+                            <img
+                              style={{
+                                display: "block",
+                                height: "auto",
+                                width: "auto",
+                                maxWidth: "100%",
+                                maxHeight: "50%",
+                                objectFit: "scale-down",
+                                textAlign: "center"
+                              }}
+                              src={i.src}
+                              alt="Nope"
+                              key={new Date().getTime()}
+                            />
+                          </div>
+                        );
+                      })}
+                    </Carousel>
+                  )
+                }
+                actions={[<Upload />]}
+              >
+                <h3 style={{ textAlign: "center" }}>
+                  Upload More images by clicking below
+                </h3>
+              </Card>
+            </Col>
+          </Row>
+        </div>
       </>
     );
   }
