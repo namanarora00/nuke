@@ -165,5 +165,9 @@ router.get('/verify', auth.required, (req, res) => {
     res.sendStatus(200);
 })
 
+router.get('/data', currentUser, (req, res) => {
+    return res.json(req.user);
+})
+
 
 module.exports = router;
