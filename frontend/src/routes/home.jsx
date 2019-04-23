@@ -148,7 +148,7 @@ class HomePage extends Component {
                                 height: "auto",
                                 width: "auto",
                                 maxWidth: "100%",
-                                maxHeight: "50%",
+                                maxHeight: "400px",
                                 objectFit: "scale-down",
                                 textAlign: "center"
                               }}
